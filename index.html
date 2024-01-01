@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>&lt;model-viewer&gt; template</title>
+    <meta charset="utf-8">
+    <meta name="description" content="&lt;model-viewer&gt; template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" href="./styles.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <!-- <model-viewer> HTML element -->
+    <model-viewer id="helmet" src="vida2.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="commerce" poster="poster.webp" interpolation-decay="200" shadow-intensity="1" camera-orbit="720.3deg 22.5deg 32.8m" field-of-view="30deg" environment-image="legacy">
+      <button class="Hotspot" slot="hotspot-1" data-position="-12.416420647674643m 1.4943620451342645m -0.7494717330148917m" data-normal="1m 0m 0m" 
+      data-orbit="812.8deg 69.18deg 17.79m" data-target="-15.46m -0.93m 0.2397m" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Kitchen</div>
+
+      </button><button class="Hotspot" slot="hotspot-2" data-position="-13.036700608440157m 1.9957696043343143m -6.087581240650648m" field-of-view="10deg" data-normal="1m 0m 0m" data-visibility-attribute="visible"
+      data-orbit="809.9deg 22.5deg 17.79m" data-target="-12.13m -0.61m -4.881m">
+          <div class="HotspotAnnotation">Bedroom</div>
+
+      </button><button class="Hotspot" slot="hotspot-3" data-position="-1.0226305906686548m 2.389507708812256m -5.96788450607926m" data-normal="-1m 0m 0m" 
+      data-orbit="661.3deg 22.5deg 17.79m" data-target="-0.74m -1.48m -5.43m" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Bedroom #2</div>
+
+      </button><button class="Hotspot" slot="hotspot-4" data-position="-5.271000560589512m 2.560103825529027m -6.7643622979848m" 
+      data-orbit="813.9deg 22.5deg 17.79m" data-target="-8.73m -5.97m -4.55m" data-normal="0m 3.029462793290625e-7m 0.9999999999999541m" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Toilet</div>
+
+      </button><button class="Hotspot" slot="hotspot-6" data-position="-1.022630590668661m 2.702324386759556m 0.9532830236323777m" data-normal="-1m 0m 0m" 
+      data-orbit="635.5deg 70.81deg 17.79m" data-target="-0.98m 0.23m -0.4254m" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Living room</div>
+
+      </button><button class="Hotspot" slot="hotspot-7" data-position="-8.62433251247321m 2.446050491899604m -6.732567718747095m" 
+      data-orbit="813.9deg 22.5deg 17.79m" data-target="-9.73m -5.97m -4.55m" data-normal="0m 3.029462793290625e-7m 0.9999999999999541m" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Bathroom</div>
+      </button>
+      <div class="progress-bar hide" slot="progress-bar">
+          <div class="update-bar"></div>
+      </div>
+      <button slot="ar-button" id="ar-button">
+          View in your space
+      </button>
+      <div id="ar-prompt">
+          <img src="ar_hand_prompt.png">
+      </div>
+      <div class="controls">
+        <div>
+          <p class="Hotspo">Wall Texture</p>
+          <select id="diffuse">
+            <option value="stone.jpg">Stone Tiles</option>
+            <option value="concrete.jpg">Concrete</option>
+            <option value="plaster.jpg">Day Plaster</option>
+          </select>
+        </div>
+        </div>
+    </model-viewer>  
+    <script src="script.js"></script>
+    <!-- Loads <model-viewer> for browsers: -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.2.0/model-viewer.min.js"></script>
+
+    <script type="module">
+        const modelViewerTexture1 = document.querySelector("model-viewer#helmet");
+        
+        modelViewerTexture1.addEventListener("load", () => {
+        
+          const material = modelViewerTexture1.model.materials[3];
+        
+          const createAndApplyTexture = async (channel, event) => {
+            const texture = await modelViewerTexture1.createTexture(event.target.value);
+            if (channel.includes('base') || channel.includes('metallic')) {
+              material.pbrMetallicRoughness[channel].setTexture(texture);
+            } else {
+              material[channel].setTexture(texture);
+            }
+          }      
+          document.querySelector('#diffuse').addEventListener('input', (event) => {
+            createAndApplyTexture('baseColorTexture', event);
+          });
+
+        });
+        
+        </script>
+        <script type="module">
+            const modelViewer2 = document.querySelector("#helmet");
+            const annotationClicked = (annotation) => {
+              let dataset = annotation.dataset;
+              modelViewer2.cameraTarget = dataset.target;
+              modelViewer2.cameraOrbit = dataset.orbit;
+              modelViewer2.fieldOfView = '45deg';
+            }
+          
+            modelViewer2.querySelectorAll('button').forEach((hotspot) => {
+              hotspot.addEventListener('click', () => annotationClicked(hotspot));
+            });
+          </script>
+  </body>
+</html>
